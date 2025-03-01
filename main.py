@@ -17,4 +17,5 @@ def run_spider():
     process.start()
 
 if __name__ == "__main__":
-    run_spider()
+    # run_spider()
+    pass

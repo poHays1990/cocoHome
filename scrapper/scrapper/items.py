@@ -8,5 +8,13 @@ import scrapy
 
 class ScrapperItem(scrapy.Item):
     # define the fields for your item here like:
-    # name = scrapy.Field()
+    name = scrapy.Field()
     pass
+
+class HouseItem(scrapy.Item):
+    id = scrapy.Field()
+    title = scrapy.Field()
+    price = scrapy.Field()
+    area = scrapy.Field()
+    utilities = scrapy.Field()
+    adresse = scrapy.Field()

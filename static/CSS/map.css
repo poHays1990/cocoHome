@@ -1,0 +1,211 @@
+body {
+    font-family: 'Itim', cursive;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+    margin: 0;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: white;
+    padding: 10px 20px;
+    height: 50px;
+    flex-shrink: 0;
+}
+
+.logo {
+    height: 100%;
+    max-height: 100%;
+}
+
+nav {
+    display: flex;
+    gap: 70px;
+    padding: 50px;
+}
+
+nav a {
+    color: #7B8D97;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 2em;
+}
+
+main {
+    display: flex;
+    flex: 1;
+    height: calc(100vh - 50px);
+}
+
+.filters {
+    width: 15%;
+    background-color: #EE7AC2;
+    padding: 20px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+    max-height: 100%;
+}
+
+.filters label {
+    display: block;
+    font-size: 1.1em;
+}
+
+.filters select, .filters input {
+    width: 90%;
+    padding: 8px;
+    border: none;
+    font-size: 1em;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+    outline: none;
+}
+
+#communes {
+    width: 90%;
+    padding: 6px;
+    border: 1px solid #ccc;
+    font-size: 1em;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    resize: none;
+}
+
+/* Effet au focus */
+.filters select:focus, .filters input:focus {
+    background-color: white;
+    box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.2);
+}
+
+.utilities {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5px;
+}
+
+.utility-btn {
+    background-color: transparent;
+    color: white;
+    border: 2px solid white;
+    padding: 8px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: all 0.3s ease;
+}
+
+.utility-btn.selected {
+    background-color: white;
+    color: #EE7AC2;
+}
+
+.map-container {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+}
+
+
+/* Panneau coulissant */
+#info-panel {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 25%;
+    background: rgba(123, 141, 151, 0.9); /* Ajout de transparence */
+    color: white;
+    transition: height 0.3s ease-in-out;
+    overflow: hidden;
+    z-index: 1000;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    padding: 15px;
+}
+
+#info-panel.expanded {
+    height: 100%;
+    border-radius: 20px;
+}
+
+#info-panel {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 25%;
+    background: rgba(123, 141, 151, 0.9);
+    color: white;
+    transition: height 0.3s ease-in-out;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    z-index: 1000;
+    overflow: visible; /* Permet à la flèche d'être visible */
+}
+
+#toggle-btn {
+    position: absolute;
+    top: -20px; /* Sortir légèrement du panneau */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 40px;
+    background: rgba(123, 141, 151, 0.9); /* Même couleur que le panneau */
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2em;
+    color: white;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1001; /* Assure que la flèche est au-dessus */
+}
+
+#toggle-btn:hover {
+    background: rgba(123, 141, 151, 1); /* Opacité pleine au survol */
+}
+
+
+.info-content {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+}
+
+.info-content img {
+    width: 120px;
+    height: 120px;
+    border-radius: 10px;
+    margin-right: 20px;
+}
+
+
+@media (max-width: 768px) {
+    main {
+        flex-direction: column;
+    }
+    .filters {
+        width: 100%;
+    }
+    .map-container {
+        width: 100%;
+    }
+}

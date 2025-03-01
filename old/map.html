@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon application</title>
+</head>
+<body>
+        {% if entites_selectionnees|length ==0 %}
+            <p>Aucun paramètre n'a été rentré!!!</p>
+        {% else %}
+            <ul>
+                {% for entite in entites_selectionnees %}
+                <li> {{ "le titre est : " + entite['title'] }} </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carte des Appartements</title>
+    
+    <!-- CSS de Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+    <!-- JS de Leaflet -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+<body>
+    <h1>Carte des Appartements</h1>
+    <div id="map"></div>
+
+
+    <!-- Chargement du script -->
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+</body>
+</html>

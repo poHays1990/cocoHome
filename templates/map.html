@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carte des Appartements</title>
+    <link href="https://fonts.googleapis.com/css2?family=Itim&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="static/CSS/map.css">
+</head>
+<body>
+    <header>
+        <img src="static/images/logo-next.jpg" alt="Logo" class="logo">
+        <nav>
+            <a href="#">Map</a>
+            <a href="#">About</a>
+            <a href="#">Contact</a>
+        </nav>
+    </header>
+    <main>
+        <section class="filters">
+            <label for="communes">Choisissez votre commune :</label>
+            <textarea id="communes" rows="2"></textarea>
+            <div class="surface-pieces-container">
+                <div>
+                    <label for="surface">Surface :</label>
+                    <input type="number" id="surface">
+                </div>
+                <div>
+                    <label for="pieces">Nombre de pièces :</label>
+                    <input type="number" id="pieces">
+                </div>
+                <div>
+                    <label for="price-min">Prix min :</label>
+                    <input type="number" id="price-min">
+                </div>
+                <div>
+                    <label for="price-max">Prix max :</label>
+                    <input type="number" id="price-max">
+                </div>
+            </div>
+            <label>Utilities :</label>
+            <div class="utilities">
+                <button class="utility-btn">Air-conditioner</button>
+                <button class="utility-btn">Balcony</button>
+                <button class="utility-btn">Basement</button>
+                <button class="utility-btn">Cable TV</button>
+                <button class="utility-btn">Cafeteria</button>
+                <button class="utility-btn">Cleaning</button>
+                <button class="utility-btn">Convenient Store</button>
+                <button class="utility-btn">Elevator</button>
+                <button class="utility-btn">Fridge</button>
+                <button class="utility-btn">Internet</button>
+                <button class="utility-btn">Parking</button>
+                <button class="utility-btn">Pets Allow</button>
+                <button class="utility-btn">Restaurant</button>
+                <button class="utility-btn">TV</button>
+                <button class="utility-btn">Washing Machine</button>
+                <button class="utility-btn">Wi-Fi</button>
+                <button class="utility-btn">Window</button>
+            </div>
+        </section>
+        <section class="map-container">
+            <div id="map"></div>
+            <div id="info-panel">
+                <div id="toggle-btn">▲</div>
+                <div class="info-content">
+                    <img src="static/images/maison.jpg" alt="Maison à louer">
+                    <div>
+                        <h2>Descriptif de cette maison à louer de 7 pièces et 211 m²</h2>
+                        <p>Pour une surface de 211.13m² habitable, elle se compose au rez-de-chaussée d'un grand séjour de 55m² avec cheminée décorative, d'une cuisine équipée de 17m², de deux salons, d'un dégagement, d'une chambre avec salle d'eau et d'un WC séparé. 
+                        Un bel escalier en bois permet l'accès à l'étage où vous trouverez quatre chambres avec parquet bois dont 3 avec balcon, une salle de bains avec baignoire et un vaste dégagement pouvant servir de coin bureau.
+                        Un grand sous-sol avec double garage et buanderie complètent la villa.
+                        Pour votre confort, la maison est équipée d'une pompe à chaleur, le chauffage est au sol. L'eau chaude et froide sont individuelles.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map').setView([10.7769, 106.7009], 14);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            detectRetina: true
+        }).addTo(map);
+
+        document.getElementById('toggle-btn').addEventListener('click', function() {
+            var panel = document.getElementById('info-panel');
+            panel.classList.toggle('expanded');
+            this.textContent = panel.classList.contains('expanded') ? '▼' : '▲';
+        });
+    </script>
+</body>
+</html>

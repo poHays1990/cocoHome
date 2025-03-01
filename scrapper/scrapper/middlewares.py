@@ -101,3 +101,171 @@ class ScrapperDownloaderMiddleware:
 
     def spider_opened(self, spider):
         spider.logger.info("Spider opened: %s" % spider.name)
+
+
+
+
+from urllib.parse import urlencode
+from random import randint
+import requests
+from scrapy import signals
+from urllib.parse import urlencode
+from random import randint
+import requests
+
+# Middleware pour gérer les interactions avec le spider
+class ScrapperSpiderMiddleware:
+    @classmethod
+    def from_crawler(cls, crawler):
+        """Initialisation du middleware via Scrapy."""
+        s = cls()
+        crawler.signals.connect(s.spider_opened, signal=signals.spider_opened)
+        return s
+
+    def process_spider_input(self, response, spider):
+        """Traite chaque réponse avant d'entrer dans le spider."""
+        return None
+
+    def process_spider_output(self, response, result, spider):
+        """Traite les résultats renvoyés par le spider."""
+        for i in result:
+            yield i
+
+    def process_start_requests(self, start_requests, spider):
+        """Traite les requêtes initiales du spider."""
+        for r in start_requests:
+            yield r
+
+    def spider_opened(self, spider):
+        """Affiche un message lorsque le spider démarre."""
+        spider.logger.info("Spider opened: %s" % spider.name)
+
+# Middleware pour gérer les interactions avec le downloader
+class ScrapperDownloaderMiddleware:
+    @classmethod
+    def from_crawler(cls, crawler):
+        s = cls()
+        crawler.signals.connect(s.spider_opened, signal=signals.spider_opened)
+        return s
+
+    def process_request(self, request, spider):
+        """Traite chaque requête avant qu'elle ne soit envoyée."""
+        return None
+
+    def process_response(self, request, response, spider):
+        """Traite chaque réponse avant qu'elle ne soit transmise au spider."""
+        return response
+
+    def spider_opened(self, spider):
+        spider.logger.info("Spider opened: %s" % spider.name)
+
+# Middleware pour simuler des user-agents aléatoires
+class ScrapeOpsFakeUserAgentMiddleware:
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls(crawler.settings)
+
+    def __init__(self, settings):
+        self.scrapeops_api_key = settings.get('SCRAPEOPS_API_KEY')
+        self.scrapeops_endpoint = settings.get('SCRAPEOPS_FAKE_USER_AGENT_ENDPOINT', 'https://headers.scrapeops.io/v1/user-agents')
+        self.scrapeops_fake_user_agents_active = settings.get('SCRAPEOPS_FAKE_USER_AGENT_ENABLED', False)
+        self.scrapeops_headers = []
+        self._get_user_agents_list()
+        self._scrapeops_fake_user_agents_enabled()
+
+    def _get_user_agents_list(self):
+        """Récupère une liste de user-agents depuis ScrapeOps."""
+        if self.scrapeops_api_key:
+            response = requests.get(self.scrapeops_endpoint, params={'api_key': self.scrapeops_api_key})
+            if response.status_code == 200:
+                self.scrapeops_headers = response.json().get('result', [])
+                
+    def _scrapeops_fake_user_agents_enabled(self):
+        """Active ou désactive l'utilisation des User-Agents ScrapeOps en fonction des paramètres."""
+        if not self.scrapeops_api_key:  
+            self.scrapeops_fake_user_agents_active = False  # Désactive si pas de clé API
+        
+        if self.scrapeops_fake_user_agents_active and not self.scrapeops_headers:
+            print("⚠️ Aucune User-Agent récupérée. Désactivation du middleware.")
+            self.scrapeops_fake_user_agents_active = False  # Désactive si aucune User-Agent récupérée
+
+    def _get_random_user_agent(self):
+        """Retourne un user-agent aléatoire."""
+        if self.scrapeops_headers:
+            return self.scrapeops_headers[randint(0, len(self.scrapeops_headers) - 1)]
+        return None
+
+    def process_request(self, request, spider):
+        """Modifie l'en-tête User-Agent de chaque requête."""
+        if self.scrapeops_fake_user_agents_active:
+            user_agent = self._get_random_user_agent()
+            if user_agent:
+                request.headers['User-Agent'] = user_agent.get('user_agent')
+            
+        print("********** USER AGENT **********", flush=True)
+        print(request.headers.get('User-Agent', 'No User-Agent Set'))
+
+# Middleware pour simuler des en-têtes HTTP aléatoires
+class ScrapeOpsFakeHeadersMiddleware:
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls(crawler.settings)
+
+    def __init__(self, settings):
+        self.scrapeops_api_key = settings.get('SCRAPEOPS_API_KEY')
+        self.scrapeops_endpoint = settings.get('SCRAPEOPS_FAKE_HEADER_ENDPOINT', 'https://headers.scrapeops.io/v1/browser-headers')
+        self.scrapeops_fake_headers_active = settings.get('SCRAPEOPS_FAKE_HEADER_ENABLED', True)
+        self.scrapeops_headers = []
+        self._get_headers_list()
+        self._scrapeops_fake_headers_enabled()
+
+    def _get_headers_list(self):
+        """Récupère une liste d'en-têtes HTTP depuis ScrapeOps."""
+        if self.scrapeops_api_key:
+            response = requests.get(self.scrapeops_endpoint, params={'api_key': self.scrapeops_api_key})
+            if response.status_code == 200:
+                self.scrapeops_headers = response.json().get('result', [])
+    
+    def _scrapeops_fake_headers_enabled(self):
+        """Active ou désactive l'utilisation des headers ScrapeOps en fonction des paramètres."""
+        if not self.scrapeops_api_key:  
+            self.scrapeops_fake_headers_active = False  # Désactive si pas de clé API
+        
+        if self.scrapeops_fake_headers_active and not self.scrapeops_headers:
+            print("⚠️ Aucune en-tête récupérée. Désactivation du middleware.")
+            self.scrapeops_fake_headers_active = False  # Désactive si aucune en-tête récupérée
+
+
+
+    def _get_random_headers(self):
+        """Retourne un ensemble d'en-têtes HTTP aléatoire."""
+        if self.scrapeops_headers:
+            return self.scrapeops_headers[randint(0, len(self.scrapeops_headers) - 1)]
+        return None
+
+    def process_request(self, request, spider):
+        """Ajoute des en-têtes HTTP aléatoires à chaque requête."""
+        random_browser_header = self._get_random_headers()
+        
+        request.headers['accept-language'] = random_browser_header['accept-language']
+        if random_browser_header.get('sec-fetch-user'):
+            request.headers['sec-fetch-user'] = random_browser_header['sec-fetch-user']
+        if random_browser_header.get('sec-fetch-mod'):
+            request.headers['sec-fetch-mod'] = random_browser_header['sec-fetch-mod']
+        if random_browser_header.get('sec-fetch-site'):
+            request.headers['sec-fetch-site'] = random_browser_header['sec-fetch-site']
+        if random_browser_header.get('sec-ch-ua-platform'):
+            request.headers['sec-ch-ua-platform'] = random_browser_header['sec-ch-ua-platform']
+        if random_browser_header.get('sec-ch-ua-mobile'):
+            request.headers['sec-ch-ua-mobile'] = random_browser_header['sec-ch-ua-mobile']
+        if random_browser_header.get('sec-fetch-site'):
+            request.headers['sec-fetch-site'] = random_browser_header['sec-fetch-site']
+        if random_browser_header.get('sec-ch-ua'):
+            request.headers['sec-ch-ua'] = random_browser_header['sec-ch-ua']
+        request.headers['accept'] = random_browser_header['accept'] 
+        request.headers['user-agent'] = random_browser_header['user-agent'] 
+        request.headers['upgrade-insecure-requests'] = random_browser_header.get('upgrade-insecure-requests')
+    
+
+        print("************ NEW HEADER ATTACHED *******")
+        print(request.headers)
